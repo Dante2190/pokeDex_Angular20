@@ -1,2 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+@layer base {
+  body {
+    @apply bg-neutral-950 text-neutral-100 antialiased;
+  }
+}

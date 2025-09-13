@@ -1,165 +1,244 @@
-<section class="mx-auto max-w-6xl px-4 py-6">
-  <div class="flex flex-wrap items-end justify-between gap-3">
-    <h2 class="text-2xl font-semibold tracking-tight">Pokédex</h2>
+<section class="mx-auto max-w-7xl px-6 py-10">
+  <header class="mb-6 flex items-center justify-between">
+    <h1 class="text-2xl font-semibold tracking-tight">Pokédex</h1>
 
-    <!-- Buscador -->
-    <div class="w-full max-w-xs">
-      <label for="q" class="block text-sm font-medium text-neutral-700">Buscar (≥ 3 letras)</label>
-      <input
-        id="q"
-        type="text"
-        #qInput
-        (input)="onSearchInput(qInput.value)"
-        placeholder="Ej: pik, char, bul…"
-        class="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none
-               focus:ring-2 focus:ring-indigo-500/50"
-        autocomplete="off"
-      />
-      <div class="mt-1 h-5 text-xs text-neutral-500">
-        <ng-container *ngIf="minQueryMet(); else hintTpl">
-          <span *ngIf="searching(); else countTpl">Buscando…</span>
-          <ng-template #countTpl>Resultados: {{ results().length }}</ng-template>
-        </ng-container>
-        <ng-template #hintTpl>Escribe al menos 3 letras.</ng-template>
+    <!-- Paginación (desktop) -->
+    <nav class="hidden sm:flex items-center gap-2 text-sm">
+      <button type="button"
+              class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
+              (click)="go(page()-1)" [disabled]="page()<=1">Anterior</button>
+      <span class="tabular-nums text-neutral-300">{{ page() }} / {{ totalPages() }}</span>
+      <button type="button"
+              class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
+              (click)="go(page()+1)" [disabled]="page()>=totalPages()">Siguiente</button>
+    </nav>
+  </header>
+
+  <!-- LAYOUT: sidebar + grid -->
+  <div class="grid gap-8 md:grid-cols-[280px,1fr]">
+    <!-- SIDEBAR (vertical, alineado) -->
+    <aside class="space-y-7">
+      <!-- Buscar -->
+      <div>
+        <label for="q" class="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-400">Buscar</label>
+        <input id="q" type="text" #qInput
+               (input)="onSearchInput(qInput.value)"
+               placeholder="Escribe al menos 3 letras…"
+               class="w-full rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm outline-none
+                      placeholder:text-neutral-500 hover:border-neutral-600 focus:border-neutral-500"
+               autocomplete="off" />
       </div>
-    </div>
-  </div>
 
-  <!-- RESULTADOS (cuando hay búsqueda) -->
-  <div *ngIf="minQueryMet()">
-    <section class="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-      <button
-        *ngFor="let p of results()"
-        type="button"
-        class="group rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4
-               shadow-sm transition hover:-translate-y-0.5 hover:shadow-md
-               focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-        (click)="open(p.name)"
-      >
-        <img [src]="p.imageUrl" [alt]="p.name"
-             class="mx-auto size-32 object-contain transition-transform duration-150 group-hover:scale-[1.03]" />
-        <h3 class="mt-3 text-center text-sm font-medium text-neutral-800 dark:text-neutral-200">
-          {{ p.name | titlecase }}
-        </h3>
-      </button>
-    </section>
-    <p *ngIf="!searching() && results().length === 0" class="mt-3 text-sm text-neutral-600">
-      Sin resultados.
-    </p>
-  </div>
-
-  <!-- PAGINADA (cuando NO hay búsqueda) -->
-  <div *ngIf="!minQueryMet()">
-    <!-- Controles arriba -->
-    <div class="mt-4 flex items-center justify-center gap-2">
-      <button
-        type="button"
-        class="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50 disabled:opacity-50"
-        (click)="go(page()-1)"
-        [disabled]="page()<=1"
-      >« Anterior</button>
-
-      <span class="text-sm text-neutral-600">Página {{ page() }} / {{ totalPages() }}</span>
-
-      <button
-        type="button"
-        class="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50 disabled:opacity-50"
-        (click)="go(page()+1)"
-        [disabled]="page()>=totalPages()"
-      >Siguiente »</button>
-    </div>
-
-    <!-- Loading / Grid -->
-    <div *ngIf="loading(); else listTpl"
-         class="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-      <div *ngFor="let _ of [].constructor(10)"
-           class="aspect-square rounded-2xl border border-neutral-200 dark:border-neutral-800
-                  bg-neutral-100 dark:bg-neutral-900 animate-pulse"></div>
-    </div>
-
-    <ng-template #listTpl>
-      <section class="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-        <button
-          *ngFor="let p of pokemons()"
-          type="button"
-          class="group rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4
-                 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md
-                 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          (click)="open(p.name)"
-        >
-          <img [src]="p.imageUrl" [alt]="p.name"
-               class="mx-auto size-32 object-contain transition-transform duration-150 group-hover:scale-[1.03]" />
-          <h3 class="mt-3 text-center text-sm font-medium text-neutral-800 dark:text-neutral-700">
-            {{ p.name | titlecase }}
-          </h3>
-        </button>
-      </section>
-
-      <!-- Controles abajo -->
-      <div class="mt-6 flex items-center justify-center gap-2">
-        <button
-          type="button"
-          class="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50 disabled:opacity-50"
-          (click)="go(page()-1)"
-          [disabled]="page()<=1"
-        >« Anterior</button>
-
-        <span class="text-sm text-neutral-600">Página {{ page() }} / {{ totalPages() }}</span>
-
-        <button
-          type="button"
-          class="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50 disabled:opacity-50"
-          (click)="go(page()+1)"
-          [disabled]="page()>=totalPages()"
-        >Siguiente »</button>
+      <!-- Tipo -->
+      <div>
+        <p class="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">Tipo</p>
+        <div class="flex flex-wrap gap-2">
+          <button *ngFor="let t of typeOptions()" type="button" (click)="toggleType(t)"
+                  class="rounded-full border px-3 py-1 text-sm transition
+                         border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+                  [ngClass]="{ 'bg-white text-neutral-900': selectedType()===t }">
+            {{ t | titlecase }}
+          </button>
+        </div>
       </div>
-    </ng-template>
-  </div>
-</section>
 
-<!-- Modal inline (tu mismo modal de siempre debajo) -->
+      <!-- Generación -->
+      <div>
+        <p class="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">Generación</p>
+        <div class="flex flex-wrap gap-2">
+          <button *ngFor="let g of [1,2,3,4,5,6,7,8,9]" type="button" (click)="toggleGen(g)"
+                  class="rounded-full border px-3 py-1 text-sm transition
+                         border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+                  [ngClass]="{ 'bg-white text-neutral-900': selectedGen()===g }">
+            {{ g }}
+          </button>
+        </div>
+      </div>
 
+      <!-- Rareza -->
+      <div>
+        <p class="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">Rareza</p>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" (click)="toggleRarity('common')"
+                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='common' }">Común</button>
+          <button type="button" (click)="toggleRarity('rare')"
+                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='rare' }">Raro</button>
+          <button type="button" (click)="toggleRarity('very-rare')"
+                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='very-rare' }">Muy Raro</button>
+          <button type="button" (click)="toggleRarity('legendary')"
+                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='legendary' }">Legendario</button>
+          <button type="button" (click)="toggleRarity('mythical')"
+                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='mythical' }">Mítico</button>
 
-<!-- Modal inline (igual que ya tenías) -->
-<div
-  *ngIf="modalOpen()"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-  (click)="close()" (keydown.escape)="close()" tabindex="0"
->
-  <div class="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl outline-none dark:bg-neutral-900"
+          <button type="button"
+                  class="ml-1 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-800"
+                  (click)="clearFilters()">Limpiar</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN GRID (alineado vertical, cards iguales) -->
+    <main>
+      <!-- Paginación móvil -->
+      <nav class="mb-4 flex items-center justify-center gap-2 text-sm sm:hidden">
+        <button type="button"
+                class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
+                (click)="go(page()-1)" [disabled]="page()<=1">Anterior</button>
+        <span class="tabular-nums text-neutral-300">{{ page() }} / {{ totalPages() }}</span>
+        <button type="button"
+                class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
+                (click)="go(page()+1)" [disabled]="page()>=totalPages()">Siguiente</button>
+      </nav>
+
+      <!-- Sin resultados -->
+      <p *ngIf="!loading() && total() === 0"
+         class="mt-6 text-center text-sm text-neutral-400">
+        No se encontraron Pokémon
+        <ng-container *ngIf="q().trim().length >= 3"> para “{{ q() }}”</ng-container>.
+      </p>
+
+      <!-- Skeleton -->
+      <div *ngIf="loading(); else listTpl" class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div *ngFor="let _ of [].constructor(8)"
+             class="h-72 rounded-2xl border border-neutral-800 bg-neutral-900 animate-pulse"></div>
+      </div>
+
+      <!-- GRID -->
+      <ng-template #listTpl>
+        <section class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <button
+            *ngFor="let p of pokemons()"
+            type="button"
+            class="group h-72 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-left shadow-sm transition
+                   hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
+            (click)="open(p.name)"
+          >
+            <div class="flex h-full flex-col">
+              <!-- Imagen + badge -->
+              <div class="relative">
+                <img [src]="p.imageUrl" [alt]="p.name"
+                     class="mx-auto h-28 w-28 object-contain transition group-hover:scale-[1.02]" />
+                <span class="absolute left-1.5 top-1.5 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-neutral-200 ring-1 ring-white/15">
+                  #{{ p.id }}
+                </span>
+              </div>
+
+              <!-- Nombre -->
+              <h3 class="mt-2 truncate text-sm font-semibold text-white">{{ p.name | titlecase }}</h3>
+
+              <!-- Tipos -->
+              <div class="mt-1.5 flex flex-wrap gap-1.5" *ngIf="p.types?.length">
+                <span *ngFor="let t of p.types | slice:0:2"
+                      [class]="typeChipClasses(t)"
+                      class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium">
+                  {{ t | titlecase }}
+                </span>
+              </div>
+
+              <!-- Stats al fondo -->
+              <div class="mt-auto grid grid-cols-3 gap-1.5 text-center text-[11px] text-neutral-300">
+                <div class="rounded-lg border border-white/10 bg-white/[.03] p-1.5">
+                  <div class="opacity-70">Altura</div>
+                  <div class="tabular-nums font-medium">{{ p.height ?? '—' }}</div>
+                </div>
+                <div class="rounded-lg border border-white/10 bg-white/[.03] p-1.5">
+                  <div class="opacity-70">Peso</div>
+                  <div class="tabular-nums font-medium">{{ p.weight ?? '—' }}</div>
+                </div>
+                <div class="rounded-lg border border-white/10 bg-white/[.03] p-1.5">
+                  <div class="opacity-70">XP</div>
+                  <div class="tabular-nums font-medium">{{ p.baseExp ?? '—' }}</div>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          
+        </section>
+
+        <!-- ============ MODAL ============ -->
+<div *ngIf="modalOpen()"
+     class="fixed inset-0 z-[60] flex items-center justify-center bg-neutral-950/70 backdrop-blur-sm"
+     (click)="close()" (keydown.escape)="close()" tabindex="0">
+  <div class="w-[min(92vw,900px)] rounded-3xl bg-neutral-900 text-neutral-100 shadow-2xl ring-1 ring-white/10"
        role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
-    <div class="flex items-center justify-between">
-      <h2 class="text-xl font-semibold">Detalle Pokémon</h2>
-      <button class="rounded-md px-2 py-1 text-sm text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
-              (click)="close()">Cerrar</button>
+
+    <!-- Header -->
+    <div class="flex items-center justify-between gap-4 px-6 py-5">
+      <h2 class="text-lg font-semibold tracking-tight">Detalle Pokémon</h2>
+      <button type="button" (click)="close()"
+              class="rounded-md px-2 py-1 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              aria-label="Cerrar">Cerrar</button>
     </div>
 
-    <div *ngIf="dloading()" class="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
-      <div class="aspect-square rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse"></div>
-      <div class="md:col-span-2 space-y-3">
-        <div class="h-7 w-1/2 rounded bg-neutral-100 dark:bg-neutral-800 animate-pulse"></div>
-        <div class="h-4 w-2/3 rounded bg-neutral-100 dark:bg-neutral-800 animate-pulse"></div>
-        <div class="h-4 w-1/3 rounded bg-neutral-100 dark:bg-neutral-800 animate-pulse"></div>
+    <!-- Body -->
+    <div class="grid grid-cols-1 gap-6 px-6 pb-6 md:grid-cols-3">
+      <!-- Imagen -->
+      <div class="rounded-2xl border border-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/60 p-4">
+        <img [src]="imageUrl()" [alt]="ddata()!.name"
+             class="mx-auto h-56 w-56 object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,.35)]" />
       </div>
-    </div>
 
-    <p *ngIf="!dloading() && derror()" class="mt-5 text-red-600">{{ derror() }}</p>
-
-    <div *ngIf="!dloading() && ddata()" class="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
-      <div class="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
-        <img [src]="imageUrl()" [alt]="ddata()!.name" class="mx-auto h-56 w-56 object-contain" />
-      </div>
-      <div class="md:col-span-2 space-y-2">
-        <h3 class="text-2xl font-semibold">
+      <!-- Info -->
+      <div class="md:col-span-2 space-y-4">
+        <h3 class="text-2xl font-semibold leading-tight">
           {{ ddata()!.name | titlecase }}
-          <span class="text-neutral-500">#{{ ddata()!.id }}</span>
+          <span class="ml-2 rounded-full bg-white/5 px-2 py-0.5 text-sm font-medium text-neutral-300 ring-1 ring-white/10">
+            #{{ ddata()!.id }}
+          </span>
         </h3>
-        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <p><span class="font-medium">Tipos:</span> {{ types() | titlecase }}</p>
-          <p><span class="font-medium">Altura:</span> {{ ddata()!.height }}</p>
-          <p><span class="font-medium">Peso:</span> {{ ddata()!.weight }}</p>
+
+        <!-- Tipos -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-sm text-neutral-400">Tipos:</span>
+          <span *ngFor="let t of detailTypes()"
+                [class]="typeChipClasses(t)"
+                class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ring-1">
+            {{ t | titlecase }}
+          </span>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div class="rounded-xl border border-white/10 bg-white/[.03] p-3">
+            <p class="text-xs text-neutral-400">Altura</p>
+            <p class="text-base font-medium">{{ ddata()!.height }}</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/[.03] p-3">
+            <p class="text-xs text-neutral-400">Peso</p>
+            <p class="text-base font-medium">{{ ddata()!.weight }}</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/[.03] p-3">
+            <p class="text-xs text-neutral-400">Base XP</p>
+            <p class="text-base font-medium">{{ ddata()!.base_experience || '—' }}</p>
+          </div>
+        </div>
+
+        <!-- Habilidades (si hay) -->
+        <div *ngIf="ddata()?.abilities?.length" class="space-y-1">
+          <p class="text-sm text-neutral-400">Habilidades:</p>
+          <div class="flex flex-wrap gap-2">
+            <span *ngFor="let a of ddata()!.abilities"
+                  class="rounded-lg border border-white/10 bg-white/[.04] px-2 py-1 text-xs text-neutral-200">
+              {{ a.ability.name | titlecase }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+        
+      </ng-template>
+      
+    </main>
+    
+  </div>
+  
+</section>

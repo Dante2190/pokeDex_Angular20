@@ -38,27 +38,45 @@ export class PokeApiService {
     ).pipe(map(res => res.results));
   }
 
-  getPokemonPage(limit = 20, offset = 0) {
-    const params = new HttpParams().set('limit', limit).set('offset', offset);
-    return this.http.get<{ count: number; results: { name: string; url: string }[] }>(
-      `${BASE_URL}/pokemon`, { params }
-    ).pipe(
-      map(res => {
-        const items = res.results.map(item => {
-          const parts = item.url.split('/').filter(Boolean);
-          const id = Number(parts[parts.length - 1]);
-          const imageUrl =
-            `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
-          return { name: item.name, imageUrl };
-        });
-        return { count: res.count, items };
-      })
-    );
-  }
+  // src/app/core/services/poke-api.service.ts
+getPokemonPage(limit = 20, offset = 0) {
+  const params = new HttpParams().set('limit', String(limit)).set('offset', String(offset));
+  return this.http.get<{ count: number; results: { name: string; url: string }[] }>(
+    `${BASE_URL}/pokemon`, { params }
+  ).pipe(
+    map(res => {
+      const items = res.results.map(item => {
+        const parts = item.url.split('/').filter(Boolean);
+        const id = Number(parts[parts.length - 1]);
+        const imageUrl =
+          `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+        return { id, name: item.name, imageUrl }; // <-- incluye id
+      });
+      return { count: res.count, items };
+    })
+  );
+}
+
 
 
   /** Detalle por nombre o id */
   getPokemonByName(nameOrId: string): Observable<any> {
     return this.http.get<any>(`${BASE_URL}/pokemon/${nameOrId}`);
   }
+
+  /** Devuelve los nombres de todos los tipos de Pokémon */
+getTypes() {
+  return this.http
+    .get<{ results: { name: string; url: string }[] }>(`${BASE_URL}/type`)
+    .pipe(map(res => res.results.map(t => t.name)));
+}
+
+/** Devuelve solo los NOMBRES de pokémon que pertenecen al tipo dado */
+getPokemonNamesByType(type: string) {
+  return this.http
+    .get<any>(`${BASE_URL}/type/${type}`)
+    .pipe(map(res => (res.pokemon as Array<{ pokemon: { name: string } }>)
+      .map(x => x.pokemon.name)));
+}
+
 }
