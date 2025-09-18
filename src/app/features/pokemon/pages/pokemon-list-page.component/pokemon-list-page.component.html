@@ -5,12 +5,12 @@
     <!-- Paginación (desktop) -->
     <nav class="hidden sm:flex items-center gap-2 text-sm">
       <button type="button"
-              class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
-              (click)="go(page()-1)" [disabled]="page()<=1">Anterior</button>
+        class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
+        (click)="go(page()-1)" [disabled]="page()<=1">Anterior</button>
       <span class="tabular-nums text-neutral-300">{{ page() }} / {{ totalPages() }}</span>
       <button type="button"
-              class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
-              (click)="go(page()+1)" [disabled]="page()>=totalPages()">Siguiente</button>
+        class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
+        (click)="go(page()+1)" [disabled]="page()>=totalPages()">Siguiente</button>
     </nav>
   </header>
 
@@ -21,22 +21,19 @@
       <!-- Buscar -->
       <div>
         <label for="q" class="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-400">Buscar</label>
-        <input id="q" type="text" #qInput
-               (input)="onSearchInput(qInput.value)"
-               placeholder="Escribe al menos 3 letras…"
-               class="w-full rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm outline-none
+        <input id="q" type="text" #qInput (input)="onSearchInput(qInput.value)" placeholder="Escribe al menos 3 letras…"
+          class="w-full rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm outline-none
                       placeholder:text-neutral-500 hover:border-neutral-600 focus:border-neutral-500"
-               autocomplete="off" />
+          autocomplete="off" />
       </div>
 
       <!-- Tipo -->
       <div>
         <p class="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">Tipo</p>
         <div class="flex flex-wrap gap-2">
-          <button *ngFor="let t of typeOptions()" type="button" (click)="toggleType(t)"
-                  class="rounded-full border px-3 py-1 text-sm transition
+          <button *ngFor="let t of typeOptions()" type="button" (click)="toggleType(t)" class="rounded-full border px-3 py-1 text-sm transition
                          border-neutral-700 text-neutral-200 hover:bg-neutral-800"
-                  [ngClass]="{ 'bg-white text-neutral-900': selectedType()===t }">
+            [ngClass]="{ 'bg-white text-neutral-900': selectedType()===t }">
             {{ t | titlecase }}
           </button>
         </div>
@@ -46,10 +43,9 @@
       <div>
         <p class="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">Generación</p>
         <div class="flex flex-wrap gap-2">
-          <button *ngFor="let g of [1,2,3,4,5,6,7,8,9]" type="button" (click)="toggleGen(g)"
-                  class="rounded-full border px-3 py-1 text-sm transition
+          <button *ngFor="let g of [1,2,3,4,5,6,7,8,9]" type="button" (click)="toggleGen(g)" class="rounded-full border px-3 py-1 text-sm transition
                          border-neutral-700 text-neutral-200 hover:bg-neutral-800"
-                  [ngClass]="{ 'bg-white text-neutral-900': selectedGen()===g }">
+            [ngClass]="{ 'bg-white text-neutral-900': selectedGen()===g }">
             {{ g }}
           </button>
         </div>
@@ -60,24 +56,24 @@
         <p class="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">Rareza</p>
         <div class="flex flex-wrap gap-2">
           <button type="button" (click)="toggleRarity('common')"
-                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
-                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='common' }">Común</button>
+            class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+            [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='common' }">Común</button>
           <button type="button" (click)="toggleRarity('rare')"
-                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
-                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='rare' }">Raro</button>
+            class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+            [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='rare' }">Raro</button>
           <button type="button" (click)="toggleRarity('very-rare')"
-                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
-                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='very-rare' }">Muy Raro</button>
+            class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+            [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='very-rare' }">Muy Raro</button>
           <button type="button" (click)="toggleRarity('legendary')"
-                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
-                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='legendary' }">Legendario</button>
+            class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+            [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='legendary' }">Legendario</button>
           <button type="button" (click)="toggleRarity('mythical')"
-                  class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
-                  [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='mythical' }">Mítico</button>
+            class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+            [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='mythical' }">Mítico</button>
 
           <button type="button"
-                  class="ml-1 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-800"
-                  (click)="clearFilters()">Limpiar</button>
+            class="ml-1 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-800"
+            (click)="clearFilters()">Limpiar</button>
         </div>
       </div>
     </aside>
@@ -87,17 +83,16 @@
       <!-- Paginación móvil -->
       <nav class="mb-4 flex items-center justify-center gap-2 text-sm sm:hidden">
         <button type="button"
-                class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
-                (click)="go(page()-1)" [disabled]="page()<=1">Anterior</button>
+          class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
+          (click)="go(page()-1)" [disabled]="page()<=1">Anterior</button>
         <span class="tabular-nums text-neutral-300">{{ page() }} / {{ totalPages() }}</span>
         <button type="button"
-                class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
-                (click)="go(page()+1)" [disabled]="page()>=totalPages()">Siguiente</button>
+          class="rounded-lg border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 disabled:opacity-50"
+          (click)="go(page()+1)" [disabled]="page()>=totalPages()">Siguiente</button>
       </nav>
 
       <!-- Sin resultados -->
-      <p *ngIf="!loading() && total() === 0"
-         class="mt-6 text-center text-sm text-neutral-400">
+      <p *ngIf="!loading() && total() === 0" class="mt-6 text-center text-sm text-neutral-400">
         No se encontraron Pokémon
         <ng-container *ngIf="q().trim().length >= 3"> para “{{ q() }}”</ng-container>.
       </p>
@@ -105,25 +100,22 @@
       <!-- Skeleton -->
       <div *ngIf="loading(); else listTpl" class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <div *ngFor="let _ of [].constructor(8)"
-             class="h-72 rounded-2xl border border-neutral-800 bg-neutral-900 animate-pulse"></div>
+          class="h-72 rounded-2xl border border-neutral-800 bg-neutral-900 animate-pulse"></div>
       </div>
 
       <!-- GRID -->
       <ng-template #listTpl>
         <section class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          <button
-            *ngFor="let p of pokemons()"
-            type="button"
-            class="group h-72 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-left shadow-sm transition
+          <button *ngFor="let p of pokemons()" type="button" class="group h-72 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-left shadow-sm transition
                    hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
-            (click)="open(p.name)"
-          >
+            (click)="open(p.name)">
             <div class="flex h-full flex-col">
               <!-- Imagen + badge -->
               <div class="relative">
                 <img [src]="p.imageUrl" [alt]="p.name"
-                     class="mx-auto h-28 w-28 object-contain transition group-hover:scale-[1.02]" />
-                <span class="absolute left-1.5 top-1.5 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-neutral-200 ring-1 ring-white/15">
+                  class="mx-auto h-28 w-28 object-contain transition group-hover:scale-[1.02]" />
+                <span
+                  class="absolute left-1.5 top-1.5 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-neutral-200 ring-1 ring-white/15">
                   #{{ p.id }}
                 </span>
               </div>
@@ -133,9 +125,8 @@
 
               <!-- Tipos -->
               <div class="mt-1.5 flex flex-wrap gap-1.5" *ngIf="p.types?.length">
-                <span *ngFor="let t of p.types | slice:0:2"
-                      [class]="typeChipClasses(t)"
-                      class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium">
+                <span *ngFor="let t of p.types | slice:0:2" [class]="typeChipClasses(t)"
+                  class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium">
                   {{ t | titlecase }}
                 </span>
               </div>
@@ -158,87 +149,204 @@
             </div>
           </button>
 
-          
+
         </section>
-
+        |
         <!-- ============ MODAL ============ -->
-<div *ngIf="modalOpen()"
-     class="fixed inset-0 z-[60] flex items-center justify-center bg-neutral-950/70 backdrop-blur-sm"
-     (click)="close()" (keydown.escape)="close()" tabindex="0">
-  <div class="w-[min(92vw,900px)] rounded-3xl bg-neutral-900 text-neutral-100 shadow-2xl ring-1 ring-white/10"
-       role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+        <div *ngIf="modalOpen()"
+          class="fixed inset-0 z-[60] flex items-center justify-center  bg-neutral-950/70 backdrop-blur-sm"
+          (click)="close()" (keydown.escape)="close()" tabindex="0">
+          <div class="w-[min(92vw,900px)] rounded-3xl bg-neutral-900 text-neutral-100 shadow-2xl ring-1 ring-white/10"
+            role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
 
-    <!-- Header -->
-    <div class="flex items-center justify-between gap-4 px-6 py-5">
-      <h2 class="text-lg font-semibold tracking-tight">Detalle Pokémon</h2>
-      <button type="button" (click)="close()"
-              class="rounded-md px-2 py-1 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-              aria-label="Cerrar">Cerrar</button>
-    </div>
+            <!-- Header -->
+            <div class="flex items-center justify-between gap-4 px-6 py-5">
+              <h2 class="text-lg font-semibold tracking-tight">Detalle Pokémon</h2>
+              <button type="button" (click)="close()"
+                class="rounded-md px-2 py-1 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                aria-label="Cerrar">Cerrar</button>
+            </div>
 
-    <!-- Body -->
-    <div class="grid grid-cols-1 gap-6 px-6 pb-6 md:grid-cols-3">
-      <!-- Imagen -->
-      <div class="rounded-2xl border border-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/60 p-4">
-        <img [src]="imageUrl()" [alt]="ddata()!.name"
-             class="mx-auto h-56 w-56 object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,.35)]" />
-      </div>
+            <!-- modal con scroll max-h-[calc(92vh-56px)] overflow-y-auto px-6 pb-6 pt-4 custom-scroll -->
+            <!-- modal normal grid grid-cols-1 gap-6 px-6 pb-6 md:grid-cols-3 -->
+            <div class="grid grid-cols-1 gap-6 px-6 pb-6 md:grid-cols-3">
+              <!-- ==== IZQUIERDA: imagen + resumen (nombre, tipos, stats) ==== -->
+              <div class="md:col-span-1 space-y-4">
+                <!-- Imagen -->
+                <div
+                  class="rounded-2xl border border-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/60 p-4">
+                  <img [src]="imageUrl()" [alt]="ddata()?.name || 'Pokémon'"
+                    class="mx-auto h-56 w-56 object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,.35)]" />
+                </div>
 
-      <!-- Info -->
-      <div class="md:col-span-2 space-y-4">
-        <h3 class="text-2xl font-semibold leading-tight">
-          {{ ddata()!.name | titlecase }}
-          <span class="ml-2 rounded-full bg-white/5 px-2 py-0.5 text-sm font-medium text-neutral-300 ring-1 ring-white/10">
-            #{{ ddata()!.id }}
-          </span>
-        </h3>
+                <!-- Resumen bajo la imagen -->
+                <div class="space-y-3">
+                  <h3 class="text-2xl font-semibold leading-tight flex items-center gap-2">
+                    {{ ddata()?.name | titlecase }}
+                    <span *ngIf="ddata()"
+                      class="ml-1 rounded-full bg-white/5 px-2 py-0.5 text-sm font-medium text-neutral-300 ring-1 ring-white/10">
+                      #{{ ddata()!.id }}
+                    </span>
+                  </h3>
 
-        <!-- Tipos -->
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="text-sm text-neutral-400">Tipos:</span>
-          <span *ngFor="let t of detailTypes()"
-                [class]="typeChipClasses(t)"
-                class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ring-1">
-            {{ t | titlecase }}
-          </span>
+                  <!-- Tipos -->
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span *ngFor="let t of detailTypes()" [class]="typeChipClasses(t)"
+                      class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ring-1">
+                      {{ t | titlecase }}
+                    </span>
+                  </div>
+
+                  <!-- Altura / Peso / Base XP -->
+                  <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                    <div class="rounded-xl border border-white/10 bg-white/[.03] p-3">
+                      <p class="text-xs text-neutral-400">Altura</p>
+                      <p class="text-base font-medium">{{ ddata()?.height ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-white/[.03] p-3">
+                      <p class="text-xs text-neutral-400">Peso</p>
+                      <p class="text-base font-medium">{{ ddata()?.weight ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-white/[.03] p-3">
+                      <p class="text-xs text-neutral-400">Base XP</p>
+                      <p class="text-base font-medium">{{ ddata()?.base_experience ?? '—' }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                   <!-- Habilidades -->
+                  <div *ngIf="ddata()?.abilities?.length">
+                  <p class="mb-2 text-sm text-neutral-400">Habilidades:</p>
+                  <div class="flex flex-wrap gap-2">
+                    <span *ngFor="let a of ddata()!.abilities"
+                      class="rounded-lg border border-white/10 bg-white/[.04] px-2 py-1 text-xs text-neutral-200">
+                      {{ a.ability.name | titlecase }}
+                    </span>
+                  </div>
+                </div>
+                <!-- Grito -->
+                <!-- Grito: todo en una sola fila y player pequeño -->
+                <!-- Grito en 4 filas -->
+                <div class="grid grid-rows-1 gap-5">
+                  <p class="text-sm text-neutral-400">Grito</p>
+
+                  <button type="button" (click)="playCry('latest')"
+                    class="rounded-md border border-white/10 bg-white/[.04] px-3 py-1.5 text-sm hover:bg-white/[.08]">
+                    ▶ Reproducir grito
+                  </button>
+
+                  <audio *ngIf="cryUrl()" controls [src]="cryUrl()" controlsList="nodownload noplaybackrate"
+                    class="h-[28px] w-[220px] rounded-md bg-white/5 align-middle">
+                  </audio>
+
+                  <a *ngIf="cryUrl('legacy')" [href]="cryUrl('legacy')" target="_blank" rel="noopener"
+                    class="text-xs text-indigo-300 underline underline-offset-2 ">
+                    Versión clásica (MP3)
+                  </a>
+                </div>
+
+              </div>
+
+              <!-- ==== DERECHA: Habilidades + Movimientos + Grito ==== -->
+              <div class="md:col-span-2 space-y-6">
+
+
+             
+                <!-- Cadena de evolución -->
+                <div *ngIf="evolution()?.length" class="space-y-2">
+                  <p class="text-sm text-neutral-400">Cadena de evolución:</p>
+
+                  <!-- Carril horizontal con flechitas -->
+                  <div class="flex items-center gap-3 overflow-x-auto py-1">
+                    <ng-container *ngFor="let s of evolution(); let i = index">
+                      <!-- Stage -->
+                      <button type="button" (click)="open(s.name)"
+                        class="group inline-flex min-w-[150px] flex-col items-center rounded-xl border border-white/10 bg-white/[.03] p-3 hover:bg-white/[.06]">
+                        <img [src]="s.imageUrl" [alt]="s.name"
+                          class="h-20 w-20 object-contain drop-shadow-[0_6px_18px_rgba(0,0,0,.35)]" />
+                        <div class="mt-2 text-sm font-medium">{{ s.name | titlecase }}</div>
+                        <div class="text-xs text-neutral-400">#{{ s.id }}</div>
+                        <div *ngIf="s.note"
+                          class="mt-1 rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-neutral-300">
+                          {{ s.note }}
+                        </div>
+                      </button>
+
+                      <!-- Arrow (no después del último) -->
+                      <div *ngIf="i < evolution().length - 1" class="shrink-0 text-neutral-400">
+                        <!-- flechita -->
+                        <svg viewBox="0 0 24 24" class="h-5 w-5">
+                          <path d="M5 12h14M13 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              
+
+                <!-- Movimientos -->
+                <div *ngIf="moves()?.length">
+                  <p class="mb-2 text-sm text-neutral-400">Movimientos:</p>
+                  <div class="grid gap-2 sm:grid-cols-2">
+                    <div *ngFor="let m of moves()" class="rounded-xl border border-white/10 bg-white/[.03] p-3">
+                      <div class="flex items-center justify-between">
+                        <h4 class="text-sm font-medium">{{ m.name | titlecase }}</h4>
+                        <span class="rounded-md bg-white/10 px-2 py-0.5 text-xs">
+                          {{ m.power ?? '—' }}
+                        </span>
+                      </div>
+                      <div class="mt-2 flex flex-wrap gap-1.5">
+                        <span [class]="typeChipClasses(m.type.name)"
+                          class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium">
+                          {{ m.type.name | titlecase }}
+                        </span>
+                        <span class="inline-flex items-center rounded-full bg-white/10 px-2 py-0.5 text-[11px]">
+                          {{ m.damage_class.name | titlecase }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Base de estadísticas -->
+                <div *ngIf="ddata()?.stats?.length" class="space-y-2">
+                  <p class="text-sm font-medium">Base de estadísticas</p>
+
+                  <div class="overflow-hidden rounded-xl border border-white/10">
+                    <div class="grid grid-cols-[1fr_auto] gap-x-4 bg-white/[.02] px-4 py-2 text-sm font-medium">
+                      <span>Estadística</span>
+                      <span class="text-right">Valor</span>
+                    </div>
+
+                    <div *ngFor="let s of baseStats()"
+                      class="grid grid-cols-[1fr_auto] items-center gap-x-4 px-4 py-2 border-t border-white/5">
+                      <div class="pr-4">
+                        <div class="mb-1 text-sm text-neutral-200">{{ s.label }}</div>
+                        <!-- Barra -->
+                        <div class="h-2 w-full rounded-full bg-white/10">
+                          <div class="h-2 rounded-full bg-emerald-500/80" [style.width]="statWidth(s.value)"></div>
+                        </div>
+                      </div>
+                      <div class="text-right tabular-nums font-semibold">{{ s.value }}</div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+              </div>
+            </div>
+
+          </div>
         </div>
 
-        <!-- Stats -->
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div class="rounded-xl border border-white/10 bg-white/[.03] p-3">
-            <p class="text-xs text-neutral-400">Altura</p>
-            <p class="text-base font-medium">{{ ddata()!.height }}</p>
-          </div>
-          <div class="rounded-xl border border-white/10 bg-white/[.03] p-3">
-            <p class="text-xs text-neutral-400">Peso</p>
-            <p class="text-base font-medium">{{ ddata()!.weight }}</p>
-          </div>
-          <div class="rounded-xl border border-white/10 bg-white/[.03] p-3">
-            <p class="text-xs text-neutral-400">Base XP</p>
-            <p class="text-base font-medium">{{ ddata()!.base_experience || '—' }}</p>
-          </div>
-        </div>
 
-        <!-- Habilidades (si hay) -->
-        <div *ngIf="ddata()?.abilities?.length" class="space-y-1">
-          <p class="text-sm text-neutral-400">Habilidades:</p>
-          <div class="flex flex-wrap gap-2">
-            <span *ngFor="let a of ddata()!.abilities"
-                  class="rounded-lg border border-white/10 bg-white/[.04] px-2 py-1 text-xs text-neutral-200">
-              {{ a.ability.name | titlecase }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-        
       </ng-template>
-      
+
     </main>
-    
+
   </div>
-  
+
 </section>
