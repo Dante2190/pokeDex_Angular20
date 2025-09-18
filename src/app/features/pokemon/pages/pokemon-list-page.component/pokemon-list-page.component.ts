@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
-
 import { PokeApiService } from '../../../../core/services/poke-api.service';
 import { PokemonBasic } from '../../../../shared/models/pokemon-basic.model';
 import { PokemonDetail } from '../../../../shared/models/pokemon-detail.model';
@@ -29,7 +28,6 @@ type EvoStage = {
   imageUrl: string;
   note?: string;     // condición simple (p. ej. "Nv.16", "Ítem: moon-stone")
 };
-
 
 const BASE_URL = 'https://pokeapi.co/api/v2';
 
@@ -62,7 +60,6 @@ const pokemons = signal<PokemonBasic[]>([]);
 // Lista de movimientos mostrados en el modal
 /* moves = signal<MoveBasic[]>([]); */
 
-
 @Component({
   selector: 'app-pokemon-list-page',
   standalone: true,
@@ -72,8 +69,6 @@ const pokemons = signal<PokemonBasic[]>([]);
 export class PokemonListPageComponent implements OnInit {
   private api = inject(PokeApiService);
   private http = inject(HttpClient);
-
-
 
   // === Paginación (20 fijos) ===
   pageSize = 20;
@@ -89,7 +84,6 @@ export class PokemonListPageComponent implements OnInit {
   selectedName = signal<string | null>(null);
   evolution = signal<EvoStage[]>([]);
   moves = signal<MoveBasic[]>([]);
-
 
   dloading = signal(false);
   derror = signal<string | null>(null);
@@ -108,8 +102,6 @@ export class PokemonListPageComponent implements OnInit {
   isAltMode = computed(() =>
     this.minQueryMet() || !!this.selectedType() || !!this.selectedGen() || !!this.selectedRarity()
   );
-
-
 
   ngOnInit(): void {
     this.loadPage(); // modo normal
@@ -257,17 +249,12 @@ export class PokemonListPageComponent implements OnInit {
     return d?.types?.map((t: any) => t.type.name).join(', ') ?? '';
   }
 
-
-
   // Tipos del detalle
-
-
   detailTypes(): string[] {
     const d = this.ddata();
     const types = d?.types ?? [];
     return types.map((t: PokemonDetail['types'][number]) => t.type.name);
   }
-
 
   typeChipClasses(t: string): string {
     const base = 'ring-1';
@@ -294,7 +281,6 @@ export class PokemonListPageComponent implements OnInit {
     return `${base} ${map[t] ?? 'bg-white/10 text-neutral-200 ring-white/10'}`;
   }
 
-
   private enrichPage(items: PokemonBasic[]) {
     const reqs = items.map(it =>
       this.api.getPokemonByName(it.name).pipe(
@@ -313,7 +299,6 @@ export class PokemonListPageComponent implements OnInit {
       error: () => this.pokemons.set(items),
     });
   }
-
 
   /** URL del grito (latest o legacy) tomado del detalle cargado en el modal */
   cryUrl(which: 'latest' | 'legacy' = 'latest'): string {
@@ -392,62 +377,59 @@ export class PokemonListPageComponent implements OnInit {
     return `${pct}%`;
   }
 
-private loadEvolution(nameOrId: string) {
-  this.evolution.set([]);
+  private loadEvolution(nameOrId: string) {
+    this.evolution.set([]);
 
-  this.api.getSpecies(nameOrId).pipe(
-    switchMap(sp => this.api.getEvolutionChain(sp.evolution_chain.url)),
-    map(res => this.flattenChain(res.chain))   // → EvoStage[]
-  )
-  .subscribe({
-    next: stages => this.evolution.set(stages),
-    error: () => this.evolution.set([]),
-  });
-}
+    this.api.getSpecies(nameOrId).pipe(
+      switchMap(sp => this.api.getEvolutionChain(sp.evolution_chain.url)),
+      map(res => this.flattenChain(res.chain))   // → EvoStage[]
+    )
+      .subscribe({
+        next: stages => this.evolution.set(stages),
+        error: () => this.evolution.set([]),
+      });
+  }
 
-/** Convierte el árbol de la evolución en una lista lineal [base → 1ra → 2da …] */
-private flattenChain(chain: any): EvoStage[] {
-  const collect: EvoStage[] = [];
+  /** Convierte el árbol de la evolución en una lista lineal [base → 1ra → 2da …] */
+  private flattenChain(chain: any): EvoStage[] {
+    const collect: EvoStage[] = [];
 
-  const walk = (node: any) => {
-    const name: string = node?.species?.name;
-    if (!name) return;
+    const walk = (node: any) => {
+      const name: string = node?.species?.name;
+      if (!name) return;
 
-    const id = this.extractIdFromSpeciesUrl(node.species.url);
-    const imageUrl = artworkUrl(id);
+      const id = this.extractIdFromSpeciesUrl(node.species.url);
+      const imageUrl = artworkUrl(id);
 
-    // Condición (simple) del primer detalle, si existe
-    let note: string | undefined;
-    const d = node?.evolution_details?.[0];
-    if (d) {
-      if (d.min_level != null) note = `Nv.${d.min_level}`;
-      else if (d.item?.name) note = `Ítem: ${d.item.name}`;
-      else if (d.trigger?.name) note = d.trigger.name; // p. ej., trade, use-item, level-up
-      if (!note && d.time_of_day) note = d.time_of_day;
-    }
+      // Condición (simple) del primer detalle, si existe
+      let note: string | undefined;
+      const d = node?.evolution_details?.[0];
+      if (d) {
+        if (d.min_level != null) note = `Nv.${d.min_level}`;
+        else if (d.item?.name) note = `Ítem: ${d.item.name}`;
+        else if (d.trigger?.name) note = d.trigger.name; // p. ej., trade, use-item, level-up
+        if (!note && d.time_of_day) note = d.time_of_day;
+      }
 
-    collect.push({ name, id, imageUrl, note });
+      collect.push({ name, id, imageUrl, note });
 
-    // Si hay ramificaciones, toma la primera (la mayoría de líneas son lineales)
-    if (Array.isArray(node.evolves_to) && node.evolves_to.length) {
-      // Si quieres mostrar TODAS las ramas, podríamos aplanar con separadores,
-      // pero por simplicidad tomamos la primera
-      walk(node.evolves_to[0]);
-    }
-  };
+      // Si hay ramificaciones, toma la primera (la mayoría de líneas son lineales)
+      if (Array.isArray(node.evolves_to) && node.evolves_to.length) {
+        // Si quieres mostrar TODAS las ramas, podríamos aplanar con separadores,
+        // pero por simplicidad tomamos la primera
+        walk(node.evolves_to[0]);
+      }
+    };
 
-  walk(chain);
-  return collect;
-}
+    walk(chain);
+    return collect;
+  }
 
-private extractIdFromSpeciesUrl(url: string): number {
-  // /api/v2/pokemon-species/1/ → 1
-  const parts = url.split('/').filter(Boolean);
-  return Number(parts.at(-1));
-}
-
-
-
+  private extractIdFromSpeciesUrl(url: string): number {
+    // /api/v2/pokemon-species/1/ → 1
+    const parts = url.split('/').filter(Boolean);
+    return Number(parts.at(-1));
+  }
 }
 
 /* ====================== Helpers (MISMO ARCHIVO) ====================== */

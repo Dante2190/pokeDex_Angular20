@@ -70,7 +70,6 @@
           <button type="button" (click)="toggleRarity('mythical')"
             class="rounded-full border px-3 py-1 text-sm border-neutral-700 text-neutral-200 hover:bg-neutral-800"
             [ngClass]="{ 'bg-white text-neutral-900': selectedRarity()==='mythical' }">Mítico</button>
-
           <button type="button"
             class="ml-1 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-800"
             (click)="clearFilters()">Limpiar</button>
@@ -148,10 +147,8 @@
               </div>
             </div>
           </button>
-
-
         </section>
-        |
+
         <!-- ============ MODAL ============ -->
         <div *ngIf="modalOpen()"
           class="fixed inset-0 z-[60] flex items-center justify-center  bg-neutral-950/70 backdrop-blur-sm"
@@ -214,8 +211,8 @@
                   </div>
                 </div>
 
-                   <!-- Habilidades -->
-                  <div *ngIf="ddata()?.abilities?.length">
+                <!-- Habilidades -->
+                <div *ngIf="ddata()?.abilities?.length">
                   <p class="mb-2 text-sm text-neutral-400">Habilidades:</p>
                   <div class="flex flex-wrap gap-2">
                     <span *ngFor="let a of ddata()!.abilities"
@@ -249,9 +246,6 @@
 
               <!-- ==== DERECHA: Habilidades + Movimientos + Grito ==== -->
               <div class="md:col-span-2 space-y-6">
-
-
-             
                 <!-- Cadena de evolución -->
                 <div *ngIf="evolution()?.length" class="space-y-2">
                   <p class="text-sm text-neutral-400">Cadena de evolución:</p>
@@ -283,7 +277,6 @@
                     </ng-container>
                   </div>
                 </div>
-              
 
                 <!-- Movimientos -->
                 <div *ngIf="moves()?.length">
@@ -332,21 +325,11 @@
                     </div>
                   </div>
                 </div>
-
-
-
-
               </div>
             </div>
-
           </div>
         </div>
-
-
       </ng-template>
-
     </main>
-
   </div>
-
 </section>
