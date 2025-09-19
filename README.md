@@ -1,59 +1,52 @@
-# PokeDexAngular20
+# Pokédex (Angular 20)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.5.
+Una Pokédex minimalista hecha con **Angular 20 (standalone + signals)** y **Tailwind CSS**, consumiendo la **[PokeAPI](https://pokeapi.co/)**.  
+Lista, busca y filtra Pokémon; muestra detalles en un modal con grito, movimientos, estadísticas base y cadena de evolución.
 
-## Development server
+---
 
-To start a local development server, run:
+## ✨ Features
 
-```bash
-ng serve
-```
+- **Listado** con paginación (20 por página) usando `limit`/`offset`.
+- **Buscador** por nombre (activa con ≥ 3 letras) + botón ✕ para limpiar.
+- **Filtros** por **tipo**, **generación** y **rareza** (common/rare/very-rare/legendary/mythical).
+- **Modal de detalle** con:
+  - Imagen oficial, nombre, tipos, altura, peso y Base XP
+  - **Habilidades**
+  - **Movimientos** (nombre, tipo, clase de daño y poder)
+  - **Grito** del Pokémon (versión latest + enlace a legacy MP3)
+  - **Estadísticas base** (barras)
+  - **Cadena de evolución** con flechitas
+- **Sin almacenamiento** local (ni cache en storage): solo memoria.
+- Código tipado con **interfaces** simples (`PokemonDetail`, `PokemonBasic`, `MoveBasic`, `PokemonSpecies`).
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🛠️ Stack
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Angular 20** (standalone components, **Signals**, `HttpClient`)
+- **Vite builder** (por defecto en Angular 17+)
+- **Tailwind CSS**
+- **RxJS** (`map`, `switchMap`, `forkJoin`, `catchError`)
+- **PokeAPI**: `/pokemon`, `/pokemon/{name}`, `/pokemon-species/{name}`, `/move/{name}`, `evolution-chain`
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📦 Requisitos
 
-```bash
-ng generate --help
-```
+- **Node.js** 18+ (recomendado 18/20)
+- **Angular CLI** 20 (`npm i -g @angular/cli`)
 
-## Building
+---
 
-To build the project run:
+## 🚀 Puesta en marcha
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Clona y ejecuta:
 
 ```bash
-ng e2e
-```
+# 1) Instalar dependencias
+npm install
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+# 2) Levantar en dev (http://localhost:4200)
+ng serve -o
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
