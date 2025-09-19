@@ -430,6 +430,14 @@ export class PokemonListPageComponent implements OnInit {
     const parts = url.split('/').filter(Boolean);
     return Number(parts.at(-1));
   }
+
+    clearSearch(input?: HTMLInputElement) {
+    this.q.set('');
+    this.page.set(1);
+    this.rebuildView();          // o this.loadPage() si no usas filtros/búsqueda
+    if (input) input.focus();    // devolver foco al buscador
+  }
+
 }
 
 /* ====================== Helpers (MISMO ARCHIVO) ====================== */

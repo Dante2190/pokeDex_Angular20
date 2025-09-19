@@ -19,19 +19,23 @@
     <!-- SIDEBAR (vertical, alineado) -->
     <aside class="space-y-7">
       <!-- Buscar -->
-      <div>
-        <label for="q" class="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-400">Buscar</label>
-        <input id="q" type="text" #qInput (input)="onSearchInput(qInput.value)" placeholder="Escribe al menos 3 letras…"
-          class="w-full rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm outline-none
-                      placeholder:text-neutral-500 hover:border-neutral-600 focus:border-neutral-500"
-          autocomplete="off" />
+      <div class="relative">
+        <input #qRef type="text" [value]="q()" (input)="onSearchInput(qRef.value)" (keydown.escape)="clearSearch(qRef)"
+          placeholder="Escribe al menos 3 letras…" class="w-full rounded-full bg-neutral-900/40 border px-4 pr-10 py-2
+           text-sm text-neutral-100 outline-none " />
+
+        <button *ngIf="q().length > 0" type="button" (click)="clearSearch(qRef)" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full px-1.5 py-0.5
+           text-neutral-300 hover:text-white hover:bg-white/10" aria-label="Borrar búsqueda" title="Borrar">
+          ✕
+        </button>
       </div>
+
 
       <!-- Tipo -->
       <div>
         <p class="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">Tipo</p>
         <div class="flex flex-wrap gap-2">
-          <button *ngFor="let t of typeOptions()" type="button" (click)="toggleType(t)" class="rounded-full border px-3 py-1 text-sm transition
+          <button *ngFor="let t of typeOptions()" type="button" (click)="toggleType(t)" class="rounded-full border px-3 py-1 text-sm transition 
                          border-neutral-700 text-neutral-200 hover:bg-neutral-800"
             [ngClass]="{ 'bg-white text-neutral-900': selectedType()===t }">
             {{ t | titlecase }}
@@ -42,7 +46,7 @@
       <!-- Generación -->
       <div>
         <p class="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">Generación</p>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2 ">
           <button *ngFor="let g of [1,2,3,4,5,6,7,8,9]" type="button" (click)="toggleGen(g)" class="rounded-full border px-3 py-1 text-sm transition
                          border-neutral-700 text-neutral-200 hover:bg-neutral-800"
             [ngClass]="{ 'bg-white text-neutral-900': selectedGen()===g }">
